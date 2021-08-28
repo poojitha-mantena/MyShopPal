@@ -4,12 +4,16 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils
+import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
+import android.widget.Toast
 import com.example.myshoppal.R
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.*
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : BaseActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -23,10 +27,68 @@ class LoginActivity : AppCompatActivity() {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN
             )
         }
-        tv_register.setOnClickListener{
-            val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
-            startActivity(intent)
+
+        tv_forgot_password.setOnClickListener(this)
+        btn_login.setOnClickListener(this)
+        tv_register.setOnClickListener(this)
+
+    }
+
+    override fun onClick(v: View?) {
+        if(v != null){
+            when(v.id){
+                R.id.tv_forgot_password->{
+                    //val intent = Intent(this@LoginActivity,ForgotPasswordActivity::class.java)
+                    //startActivity(intent)
+                }
+                R.id.btn_login->{
+                    logInRegisteredUser()
+                }
+                R.id.tv_register->{
+                    val intent = Intent(this@LoginActivity,RegisterActivity::class.java)
+                    startActivity(intent)
+                }
+            }
         }
     }
+    private fun validateLoginDetails() : Boolean{
+        return when{
+            TextUtils.isEmpty(et_email.text.toString().trim{ it <= ' '}) ->{
+                showErrorSnackBar("Please enter an email id.",true)
+                false
+            }
+            TextUtils.isEmpty(et_password.text.toString().trim{ it <= ' '}) ->{
+                showErrorSnackBar("Please enter a password.",true)
+                false
+            }
+            else->{
+                true
+            }
+
+        }
+    }
+    private fun logInRegisteredUser() {
+
+        if (validateLoginDetails()) {
+
+            showProgressDialog(resources.getString(R.string.please_wait))
+
+            val email = et_email.text.toString().trim { it <= ' ' }
+            val password = et_password.text.toString().trim { it <= ' ' }
+
+            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+
+                    hideProgressDialog()
+
+                    if (task.isSuccessful) {
+                        showErrorSnackBar("You are logged in successfully.", false)
+                    } else {
+                        showErrorSnackBar(task.exception!!.message.toString(), true)
+                    }
+                }
+        }
+    }
+
 
 }

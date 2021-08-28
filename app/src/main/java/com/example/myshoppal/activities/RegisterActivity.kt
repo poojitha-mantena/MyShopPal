@@ -50,7 +50,7 @@ class RegisterActivity : BaseActivity() {
         val actionBar = supportActionBar
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true)
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_black_back_24)
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow)
         }
 
         toolbar_register_activity.setNavigationOnClickListener {
@@ -110,7 +110,7 @@ class RegisterActivity : BaseActivity() {
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(
                     OnCompleteListener<AuthResult> { task ->
-                        
+
                         hideProgressDialog()
 
                         // If the registration is successfully done
@@ -123,6 +123,9 @@ class RegisterActivity : BaseActivity() {
                                 "You are registered successfully. Your user id is ${firebaseUser.uid}",
                                 false
                             )
+                            FirebaseAuth.getInstance().signOut()
+                            finish()
+
                         } else {
                             // If the registering is not successful then show error message.
                             showErrorSnackBar(task.exception!!.message.toString(), true)
