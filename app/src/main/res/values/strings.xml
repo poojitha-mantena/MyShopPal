@@ -27,7 +27,9 @@
     <string name="title_forgot_password">FORGOT PASSWORD</string>
     <string name="forgot_password_title_description">Enter your username and e-mail address we\'ll send you a email to reset your password</string>
     <string name="email_sent_successfully">Email sent successfully to reset your password!</string>
-
+    <string name="err_msg_enter_email">Enter the email address</string>
+    <string name="email_sent_success">Email sent successfully to reset your password </string>
+    
     <!-- user profile activity -->
     <string name="title_complete_profile">COMPLETE PROFILE</string>
     <string name="et_hint_mobile_number">Mobile Number</string>
@@ -142,4 +144,5 @@
     <string name="no_products_sold_out_yet">No Product Sold Yet!</string>
 
     <string name="title_sold_product_details">SOLD PRODUCT DETAILS</string>
+
 </resources>
