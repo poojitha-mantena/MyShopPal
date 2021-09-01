@@ -34,8 +34,7 @@ class RegisterActivity : BaseActivity() {
         setUpActionBar()
 
         tv_login.setOnClickListener {
-            val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
-            startActivity(intent)
+            onBackPressed()
         }
 
         btn_register.setOnClickListener{
