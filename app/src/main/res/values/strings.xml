@@ -29,7 +29,7 @@
     <string name="email_sent_successfully">Email sent successfully to reset your password!</string>
     <string name="err_msg_enter_email">Enter the email address</string>
     <string name="email_sent_success">Email sent successfully to reset your password </string>
-    
+
     <!-- user profile activity -->
     <string name="title_complete_profile">COMPLETE PROFILE</string>
     <string name="et_hint_mobile_number">Mobile Number</string>
