@@ -40,8 +40,10 @@
         android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_user_profile_activity">
+        app:layout_constraintTop_toBottomOf="@id/toolbar_user_profile_activity"
+        app:layout_constraintVertical_bias="1.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -62,10 +64,9 @@
                     android:layout_height="match_parent"
                     android:layout_margin="@dimen/profile_user_photo_margin"
                     android:background="@color/colorLightGrey"
-                    android:src="@drawable/ic_user_placeholder"
                     android:contentDescription="@string/content_description"
                     android:scaleType="fitXY"
-                    />
+                    android:src="@drawable/ic_user_placeholder" />
 
                 <View
                     android:layout_width="match_parent"
@@ -200,18 +201,19 @@
                     android:id="@+id/rb_female"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
                     android:layout_marginLeft="4dp"
+                    android:layout_weight="1"
                     android:background="@drawable/drawable_gender_tab_selector"
                     android:button="@null"
                     android:checked="false"
                     android:gravity="center"
                     android:text="@string/rb_label_female"
                     android:textColor="@drawable/drawable_gender_tab_text_color_selector"
-                    android:textStyle="bold"
-                    android:layout_marginStart="4dp" />
+                    android:textStyle="bold" />
 
             </RadioGroup>
+
             <com.example.myshoppal.utils.MSPButton
                 android:id="@+id/btn_submit"
                 android:layout_width="match_parent"
@@ -228,12 +230,11 @@
                 android:text="@string/btn_lbl_save"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/btn_textSize"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/rg_gender"
-                app:layout_constraintBottom_toBottomOf="parent"
                 tools:ignore="UnusedAttribute" />
-
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
