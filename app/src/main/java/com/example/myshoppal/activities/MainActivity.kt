@@ -1,11 +1,14 @@
 package com.example.myshoppal.activities
 
+import android.content.Context
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.WindowInsets
 import android.view.WindowManager
 import com.example.myshoppal.R
+import com.example.myshoppal.utils.Constants
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,5 +24,9 @@ class MainActivity : AppCompatActivity() {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN
             )
         }
+
+        val sharedPreferences = getSharedPreferences(Constants.MY_SHOP_PAL_PREFERENCES, Context.MODE_PRIVATE)
+        val username = sharedPreferences.getString(Constants.LOGGED_IN_USERNAME,"")!!
+        tv_main.text = "Hello $username."
     }
 }

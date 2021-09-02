@@ -1,5 +1,7 @@
 package com.example.myshoppal.firestore
 import android.app.Activity
+import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import com.example.myshoppal.activities.LoginActivity
 import com.example.myshoppal.activities.RegisterActivity
@@ -43,6 +45,18 @@ class FirestoreClass {
                 Log.i(activity.javaClass.simpleName, document.toString())
 
                 val user = document.toObject(User::class.java)!!
+
+                val sharedPref = activity.getSharedPreferences(
+                    Constants.MY_SHOP_PAL_PREFERENCES,
+                    Context.MODE_PRIVATE
+                )
+
+                val editor: SharedPreferences.Editor = sharedPref.edit()
+                editor.putString(
+                    Constants.LOGGED_IN_USERNAME,
+                    "${user.firstName} ${user.lastName}"
+                )
+                editor.apply()
 
                     when (activity) {
                         is LoginActivity -> activity.userLoggedInSuccess(user)
