@@ -13,6 +13,7 @@ import android.widget.Toast
 import com.example.myshoppal.R
 import com.example.myshoppal.activities.models.User
 import com.example.myshoppal.firestore.FirestoreClass
+import com.example.myshoppal.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.*
 
@@ -40,13 +41,16 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
     fun userLoggedInSuccess(user : User){
         hideProgressDialog()
 
-        Log.i("First Name: ", user.firstName)
-        Log.i("Last Name: ", user.lastName)
-        Log.i("Email Name: ", user.email)
-
-        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+        if(user.profileCompleted == 0){
+            val intent = Intent(this@LoginActivity, UserProfileActivity::class.java)
+            startActivity(intent)
+        }else{
+            val intent = Intent(this@LoginActivity, MainActivity::class.java)
+            startActivity(intent)
+        }
         finish()
     }
+    
 
     override fun onClick(v: View?) {
         if(v != null){
