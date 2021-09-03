@@ -8,6 +8,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.SyncStateContract
+import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -15,31 +16,36 @@ import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.myshoppal.R
 import com.example.myshoppal.activities.models.User
+import com.example.myshoppal.firestore.FirestoreClass
 import com.example.myshoppal.utils.Constants
 import com.example.myshoppal.utils.GlideLoader
 import kotlinx.android.synthetic.main.activity_user_profile.*
 import java.io.IOException
 
 class UserProfileActivity : BaseActivity(), View.OnClickListener {
+
+    private lateinit var mUserDetails: User
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
 
-        var userDetails: User = User()
         if(intent.hasExtra(Constants.EXTRA_USER_DETAILS)){
-            userDetails = intent.getParcelableExtra(Constants.EXTRA_USER_DETAILS)!!
+            mUserDetails = intent.getParcelableExtra(Constants.EXTRA_USER_DETAILS)!!
         }
 
         et_first_name.isEnabled = false
-        et_first_name.setText(userDetails.firstName)
+        et_first_name.setText(mUserDetails.firstName)
 
         et_last_name.isEnabled = false
-        et_last_name.setText(userDetails.lastName)
+        et_last_name.setText(mUserDetails.lastName)
 
         et_email.isEnabled = false
-        et_email.setText(userDetails.email)
+        et_email.setText(mUserDetails.email)
 
         iv_user_photo.setOnClickListener(this@UserProfileActivity)
+
+        btn_submit.setOnClickListener(this@UserProfileActivity)
     }
 
     override fun onClick(v: View?) {
@@ -57,9 +63,39 @@ class UserProfileActivity : BaseActivity(), View.OnClickListener {
                             Constants.READ_STORAGE_PERMISSION_CODE)
                     }
                 }
+
+                R.id.btn_submit ->{
+
+                    if(validateUserProfileDetails()){
+                        val userHashMap = HashMap<String, Any>()
+                        val mobileNumber = et_mobile_number.text.toString().trim { it <= ' ' }
+
+                        val gender = if (rb_male.isChecked) {
+                            Constants.MALE
+                        } else {
+                            Constants.FEMALE
+                        }
+
+                        if (mobileNumber.isNotEmpty()) {
+                            userHashMap[Constants.MOBILE] = mobileNumber.toLong()
+                        }
+
+                        userHashMap[Constants.GENDER] = gender
+
+                        showProgressDialog(resources.getString(R.string.please_wait))
+
+                        FirestoreClass().updateUserProfileData(
+                            this@UserProfileActivity,
+                            userHashMap
+                        )
+                    }
+                }
             }
         }
+
+
     }
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -97,5 +133,33 @@ class UserProfileActivity : BaseActivity(), View.OnClickListener {
 
             }
         }
+    }
+    private fun validateUserProfileDetails(): Boolean {
+        return when {
+            TextUtils.isEmpty(et_mobile_number.text.toString().trim { it <= ' ' }) -> {
+                showErrorSnackBar(getString(R.string.error_mobile_number), true)
+                false
+            }
+            else -> {
+                true
+            }
+        }
+    }
+
+    fun userProfileUpdateSuccess() {
+
+        // Hide the progress dialog
+        hideProgressDialog()
+
+        Toast.makeText(
+            this@UserProfileActivity,
+            resources.getString(R.string.profile_update_success_message),
+            Toast.LENGTH_SHORT
+        ).show()
+
+
+        // Redirect to the Main Screen after profile completion.
+        startActivity(Intent(this@UserProfileActivity, MainActivity::class.java))
+        finish()
     }
 }
