@@ -25,6 +25,7 @@ import java.io.IOException
 class UserProfileActivity : BaseActivity(), View.OnClickListener {
 
     private lateinit var mUserDetails: User
+    private var mSelectedImageFileUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +66,13 @@ class UserProfileActivity : BaseActivity(), View.OnClickListener {
                 }
 
                 R.id.btn_submit ->{
+
+                    showProgressDialog(resources.getString(R.string.please_wait))
+
+                    FirestoreClass().uploadImageToCloudStorage(
+                        this@UserProfileActivity,
+                        mSelectedImageFileUri
+                    )
 
                     if(validateUserProfileDetails()){
                         val userHashMap = HashMap<String, Any>()
@@ -119,8 +127,8 @@ class UserProfileActivity : BaseActivity(), View.OnClickListener {
         if (resultCode == Activity.RESULT_OK && requestCode == Constants.PICK_IMAGE_REQUEST_CODE) {
             if (data!!.data != null) {
                 try {
-                    val selectedImageFileUri = data.data!!
-                    GlideLoader(this).loadUserProfile(selectedImageFileUri,iv_user_photo)
+                    mSelectedImageFileUri = data.data!!
+                    GlideLoader(this).loadUserProfile(mSelectedImageFileUri!!,iv_user_photo)
 
                 } catch (e: IOException) {
                     e.printStackTrace()
@@ -148,7 +156,6 @@ class UserProfileActivity : BaseActivity(), View.OnClickListener {
 
     fun userProfileUpdateSuccess() {
 
-        // Hide the progress dialog
         hideProgressDialog()
 
         Toast.makeText(
@@ -157,9 +164,17 @@ class UserProfileActivity : BaseActivity(), View.OnClickListener {
             Toast.LENGTH_SHORT
         ).show()
 
-
-        // Redirect to the Main Screen after profile completion.
         startActivity(Intent(this@UserProfileActivity, MainActivity::class.java))
         finish()
+    }
+
+    fun imageUploadSuccess(imageURL: String) {
+        hideProgressDialog()
+
+        Toast.makeText(
+            this@UserProfileActivity,
+            "Your image is uploaded successfully. Image URL is $imageURL",
+            Toast.LENGTH_SHORT
+        ).show()
     }
 }
