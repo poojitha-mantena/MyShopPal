@@ -1,4 +1,4 @@
-package com.example.myshoppal.activities.models
+package com.example.myshoppal.models
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

@@ -1,17 +1,14 @@
-package com.example.myshoppal.activities
+package com.example.myshoppal.ui.activities
 
 import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
-import android.widget.Toast
 import com.example.myshoppal.R
-import com.example.myshoppal.activities.models.User
+import com.example.myshoppal.models.User
 import com.example.myshoppal.firestore.FirestoreClass
 import com.example.myshoppal.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
@@ -57,14 +54,14 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         if(v != null){
             when(v.id){
                 R.id.tv_forgot_password->{
-                    val intent = Intent(this@LoginActivity,ForgotPasswordActivity::class.java)
+                    val intent = Intent(this@LoginActivity, ForgotPasswordActivity::class.java)
                     startActivity(intent)
                 }
                 R.id.btn_login->{
                     logInRegisteredUser()
                 }
                 R.id.tv_register->{
-                    val intent = Intent(this@LoginActivity,RegisterActivity::class.java)
+                    val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
                     startActivity(intent)
                 }
             }

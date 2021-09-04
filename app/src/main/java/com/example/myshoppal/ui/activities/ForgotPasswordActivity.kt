@@ -1,6 +1,5 @@
-package com.example.myshoppal.activities
+package com.example.myshoppal.ui.activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.example.myshoppal.R

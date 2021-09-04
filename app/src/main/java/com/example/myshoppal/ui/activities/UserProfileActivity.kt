@@ -1,22 +1,19 @@
-package com.example.myshoppal.activities
+package com.example.myshoppal.ui.activities
 
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.SyncStateContract
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.bumptech.glide.Glide
 import com.example.myshoppal.R
-import com.example.myshoppal.activities.models.User
+import com.example.myshoppal.models.User
 import com.example.myshoppal.firestore.FirestoreClass
 import com.example.myshoppal.utils.Constants
 import com.example.myshoppal.utils.GlideLoader

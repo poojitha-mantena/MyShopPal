@@ -1,15 +1,13 @@
-package com.example.myshoppal.activities
+package com.example.myshoppal.ui.activities
 
-import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
 import com.example.myshoppal.R
-import com.example.myshoppal.activities.models.User
+import com.example.myshoppal.models.User
 import com.example.myshoppal.firestore.FirestoreClass
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
