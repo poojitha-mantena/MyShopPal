@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.SyncStateContract
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -26,12 +27,13 @@ class UserProfileActivity : BaseActivity(), View.OnClickListener {
 
     private lateinit var mUserDetails: User
     private var mSelectedImageFileUri: Uri? = null
+    private var mUserProfileImageURL: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
 
-        if(intent.hasExtra(Constants.EXTRA_USER_DETAILS)){
+        if (intent.hasExtra(Constants.EXTRA_USER_DETAILS)) {
             mUserDetails = intent.getParcelableExtra(Constants.EXTRA_USER_DETAILS)!!
         }
 
@@ -54,56 +56,43 @@ class UserProfileActivity : BaseActivity(), View.OnClickListener {
             when (v.id) {
 
                 R.id.iv_user_photo -> {
-                    if (ContextCompat.checkSelfPermission(this,
-                            Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+
+                    if (ContextCompat.checkSelfPermission(
+                            this,
+                            Manifest.permission.READ_EXTERNAL_STORAGE
+                        )
+                        == PackageManager.PERMISSION_GRANTED
                     ) {
-                        Constants.showImageChooser(this)
+                        Constants.showImageChooser(this@UserProfileActivity)
                     } else {
-                        ActivityCompat.requestPermissions(this,
+                        ActivityCompat.requestPermissions(
+                            this,
                             arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                            Constants.READ_STORAGE_PERMISSION_CODE)
+                            Constants.READ_STORAGE_PERMISSION_CODE
+                        )
                     }
                 }
 
-                R.id.btn_submit ->{
+                R.id.btn_submit -> {
 
-                    showProgressDialog(resources.getString(R.string.please_wait))
-
-                    FirestoreClass().uploadImageToCloudStorage(
-                        this@UserProfileActivity,
-                        mSelectedImageFileUri
-                    )
-
-                    if(validateUserProfileDetails()){
-                        val userHashMap = HashMap<String, Any>()
-                        val mobileNumber = et_mobile_number.text.toString().trim { it <= ' ' }
-
-                        val gender = if (rb_male.isChecked) {
-                            Constants.MALE
-                        } else {
-                            Constants.FEMALE
-                        }
-
-                        if (mobileNumber.isNotEmpty()) {
-                            userHashMap[Constants.MOBILE] = mobileNumber.toLong()
-                        }
-
-                        userHashMap[Constants.GENDER] = gender
+                    if (validateUserProfileDetails()) {
 
                         showProgressDialog(resources.getString(R.string.please_wait))
 
-                        FirestoreClass().updateUserProfileData(
-                            this@UserProfileActivity,
-                            userHashMap
-                        )
+                        if (mSelectedImageFileUri != null) {
+
+                            FirestoreClass().uploadImageToCloudStorage(
+                                this@UserProfileActivity,
+                                mSelectedImageFileUri
+                            )
+                        } else {
+                            updateUserProfileDetails()
+                        }
                     }
                 }
             }
         }
-
-
     }
-
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -113,45 +102,85 @@ class UserProfileActivity : BaseActivity(), View.OnClickListener {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == Constants.READ_STORAGE_PERMISSION_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                Constants.showImageChooser(this)
+                Constants.showImageChooser(this@UserProfileActivity)
             } else {
-                Toast.makeText(this, resources.getString(R.string.read_storage_permission_denied),
-                    Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this,
+                    resources.getString(R.string.read_storage_permission_denied),
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && requestCode == Constants.PICK_IMAGE_REQUEST_CODE) {
-            if (data!!.data != null) {
-                try {
-                    mSelectedImageFileUri = data.data!!
-                    GlideLoader(this).loadUserProfile(mSelectedImageFileUri!!,iv_user_photo)
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == Constants.PICK_IMAGE_REQUEST_CODE) {
+                if (data != null) {
+                    try {
+                        mSelectedImageFileUri = data.data!!
 
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                    Toast.makeText(
-                        this,
-                        getString(R.string.image_selection_failed),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                        GlideLoader(this@UserProfileActivity).loadUserProfile(
+                            mSelectedImageFileUri!!,
+                            iv_user_photo
+                        )
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                        Toast.makeText(
+                            this@UserProfileActivity,
+                            resources.getString(R.string.image_selection_failed),
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    }
                 }
-
             }
+        } else if (resultCode == Activity.RESULT_CANCELED) {
+            Log.e("Request Cancelled", "Image selection cancelled")
         }
     }
+
     private fun validateUserProfileDetails(): Boolean {
         return when {
+
             TextUtils.isEmpty(et_mobile_number.text.toString().trim { it <= ' ' }) -> {
-                showErrorSnackBar(getString(R.string.error_mobile_number), true)
+                showErrorSnackBar(resources.getString(R.string.error_mobile_number), true)
                 false
             }
             else -> {
                 true
             }
         }
+    }
+    private fun updateUserProfileDetails() {
+
+        val userHashMap = HashMap<String, Any>()
+
+        val mobileNumber = et_mobile_number.text.toString().trim { it <= ' ' }
+
+        val gender = if (rb_male.isChecked) {
+            Constants.MALE
+        } else {
+            Constants.FEMALE
+        }
+
+        if (mUserProfileImageURL.isNotEmpty()) {
+            userHashMap[Constants.IMAGE] = mUserProfileImageURL
+        }
+
+
+        if (mobileNumber.isNotEmpty()) {
+            userHashMap[Constants.MOBILE] = mobileNumber.toLong()
+        }
+
+        userHashMap[Constants.GENDER] = gender
+        userHashMap[Constants.COMPLETE_PROFILE] = 1
+
+        FirestoreClass().updateUserProfileData(
+            this@UserProfileActivity,
+            userHashMap
+        )
     }
 
     fun userProfileUpdateSuccess() {
@@ -167,14 +196,10 @@ class UserProfileActivity : BaseActivity(), View.OnClickListener {
         startActivity(Intent(this@UserProfileActivity, MainActivity::class.java))
         finish()
     }
-
     fun imageUploadSuccess(imageURL: String) {
-        hideProgressDialog()
 
-        Toast.makeText(
-            this@UserProfileActivity,
-            "Your image is uploaded successfully. Image URL is $imageURL",
-            Toast.LENGTH_SHORT
-        ).show()
+        mUserProfileImageURL = imageURL
+        updateUserProfileDetails()
+
     }
 }
