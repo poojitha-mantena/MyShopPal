@@ -147,5 +147,6 @@
     <string name="title_activity_dashboard">MainActivity</string>
     <string name="title_home">Home</string>
     <string name="title_notifications">Notifications</string>
+    <string name="action_settings">Settings</string>
 
 </resources>
