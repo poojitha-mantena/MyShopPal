@@ -13,7 +13,6 @@ class DashboardFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // If we want to use the option menu in fragment we need to add it.
         setHasOptionsMenu(true)
     }
 
