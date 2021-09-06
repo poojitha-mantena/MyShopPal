@@ -8,6 +8,7 @@ import com.example.myshoppal.ui.activities.LoginActivity
 import com.example.myshoppal.ui.activities.RegisterActivity
 import com.example.myshoppal.ui.activities.UserProfileActivity
 import com.example.myshoppal.models.User
+import com.example.myshoppal.ui.activities.SettingsActivity
 import com.example.myshoppal.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -63,12 +64,24 @@ class FirestoreClass {
                 editor.apply()
 
                     when (activity) {
-                        is LoginActivity -> activity.userLoggedInSuccess(user)
-
+                        is LoginActivity ->{
+                            activity.userLoggedInSuccess(user)
+                        }
+                        is SettingsActivity ->{
+                            activity.userDetailsSuccess(user)
+                        }
                     }
+
+
+
                 }.addOnFailureListener { exception ->
                 when (activity) {
-                    is LoginActivity -> activity.hideProgressDialog()
+                    is LoginActivity -> {
+                        activity.hideProgressDialog()
+                    }
+                    is SettingsActivity -> {
+                        activity.hideProgressDialog()
+                    }
                 }
 
             }

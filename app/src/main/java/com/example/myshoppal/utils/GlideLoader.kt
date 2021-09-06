@@ -9,11 +9,11 @@ import java.io.IOException
 
 class GlideLoader(val context: Context) {
 
-    fun loadUserProfile(imageUri : Uri, imageView : ImageView){
+    fun loadUserProfile(image : Any, imageView : ImageView){
         try {
             Glide
                 .with(context)
-                .load(imageUri)
+                .load(image)
                 .centerCrop()
                 .placeholder(R.drawable.ic_user_placeholder)
                 .into(imageView)
