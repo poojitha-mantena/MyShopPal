@@ -4,11 +4,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
 import android.util.Log
-import com.example.myshoppal.ui.activities.LoginActivity
-import com.example.myshoppal.ui.activities.RegisterActivity
-import com.example.myshoppal.ui.activities.UserProfileActivity
+import android.widget.Toast
+import com.example.myshoppal.models.Product
 import com.example.myshoppal.models.User
-import com.example.myshoppal.ui.activities.SettingsActivity
+import com.example.myshoppal.ui.activities.*
 import com.example.myshoppal.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -106,6 +105,7 @@ class FirestoreClass {
                     is UserProfileActivity -> {
                         activity.hideProgressDialog()
                     }
+
                 }
 
                 Log.e(
@@ -113,10 +113,10 @@ class FirestoreClass {
                     "Error while updating the user details.", e)
             }
     }
-    fun uploadImageToCloudStorage(activity: Activity, imageFileURI: Uri?) {
+    fun uploadImageToCloudStorage(activity: Activity, imageFileURI: Uri?, imageType: String) {
 
         val sRef: StorageReference = FirebaseStorage.getInstance().reference.child(
-            Constants.USER_PROFILE_IMAGE + System.currentTimeMillis() + "."
+            imageType + System.currentTimeMillis() + "."
                     + Constants.getFileExtension(
                 activity,
                 imageFileURI
@@ -137,6 +137,9 @@ class FirestoreClass {
                             is UserProfileActivity -> {
                                 activity.imageUploadSuccess(uri.toString())
                             }
+                            is AddProductActivity -> {
+                                activity.imageUploadSuccess(uri.toString())
+                            }
                         }
                     }
             }
@@ -146,6 +149,9 @@ class FirestoreClass {
                     is UserProfileActivity -> {
                         activity.hideProgressDialog()
                     }
+                    is AddProductActivity -> {
+                        activity.hideProgressDialog()
+                    }
                 }
 
                 Log.e(
@@ -153,6 +159,20 @@ class FirestoreClass {
                     exception.message,
                     exception
                 )
+            }
+    }
+
+    fun uploadProductDetails(activity: AddProductActivity, productDetails: Product) {
+        mFireStore.collection(Constants.PRODUCTS)
+            .document()
+            .set(productDetails, SetOptions.merge())
+            .addOnSuccessListener {
+                activity.productUploadSuccess()
+            }
+            .addOnFailureListener { e ->
+                activity.hideProgressDialog()
+                Toast.makeText(activity, "Error while adding product", Toast.LENGTH_SHORT).show()
+                Log.e("Error in adding prod ::", e.message.toString())
             }
     }
 }

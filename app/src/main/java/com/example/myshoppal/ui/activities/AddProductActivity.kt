@@ -2,6 +2,7 @@ package com.example.myshoppal.ui.activities
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -14,6 +15,8 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.myshoppal.R
+import com.example.myshoppal.firestore.FirestoreClass
+import com.example.myshoppal.models.Product
 import com.example.myshoppal.utils.Constants
 import com.example.myshoppal.utils.GlideLoader
 import kotlinx.android.synthetic.main.activity_add_product.*
@@ -25,6 +28,7 @@ import java.io.IOException
 class AddProductActivity : BaseActivity(), View.OnClickListener {
 
     private var mSelectedImageFileUri: Uri? = null
+    private var mProductImageURL : String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,13 +65,50 @@ class AddProductActivity : BaseActivity(), View.OnClickListener {
                 }
                 R.id.btn_submit_add_product->{
                     if (validateProductDetails()){
-                        showErrorSnackBar("Your product details are valid", false)
+                        uploadProductImage()
                     }
                 }
             }
         }
     }
 
+    private fun uploadProductImage(){
+        showProgressDialog(getString(R.string.please_wait))
+
+       FirestoreClass().uploadImageToCloudStorage(this,mSelectedImageFileUri,Constants.PRODUCT_IMAGE)
+    }
+
+    fun productUploadSuccess(){
+        hideProgressDialog()
+        Toast.makeText(this, getString(R.string.product_upload_success_message), Toast.LENGTH_SHORT).show()
+
+        finish()
+
+    }
+
+    fun imageUploadSuccess(imageURL : String){
+        mProductImageURL = imageURL
+        uploadProductDetails()
+    }
+
+    private fun uploadProductDetails(){
+
+        val shared = getSharedPreferences(Constants.MY_SHOP_PAL_PREFERENCES, Context.MODE_PRIVATE)
+        val userName = shared.getString(Constants.LOGGED_IN_USERNAME,"")
+
+        val productDetails = Product(
+            FirestoreClass().getCurrentUserId(),
+            userName!!,
+            et_product_title.text.toString().trim{ it <= ' '},
+            et_product_price.text.toString().trim{ it<= ' '},
+            et_product_description.text.toString().trim{it <= ' '},
+            et_product_quantity.text.toString().trim{ it <= ' '},
+            mProductImageURL
+        )
+
+        FirestoreClass().uploadProductDetails(this,productDetails)
+
+    }
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
