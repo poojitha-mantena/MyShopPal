@@ -10,7 +10,7 @@ import com.example.myshoppal.databinding.FragmentProductsBinding
 import com.example.myshoppal.ui.activities.AddProductActivity
 import com.example.myshoppal.ui.activities.SettingsActivity
 
-class ProductsFragment : Fragment() {
+class ProductsFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,9 +34,6 @@ class ProductsFragment : Fragment() {
         _binding = FragmentProductsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textHome
-
-            textView.text = "This is home fragment"
         return root
     }
 
