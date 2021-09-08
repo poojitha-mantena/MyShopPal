@@ -2,11 +2,14 @@ package com.example.myshoppal.ui.Fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.myshoppal.R
 import com.example.myshoppal.databinding.FragmentProductsBinding
+import com.example.myshoppal.firestore.FirestoreClass
+import com.example.myshoppal.models.Product
 import com.example.myshoppal.ui.activities.AddProductActivity
 import com.example.myshoppal.ui.activities.SettingsActivity
 
@@ -23,6 +26,26 @@ class ProductsFragment : BaseFragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
+    fun successProductListFromFirestore(productsList: ArrayList<Product>) {
+        hideProgressDialog()
+
+        for(i in productsList){
+            Log.i("Products list:", i.title)
+        }
+
+    }
+
+    private fun getProductListFromFireStore() {
+        showProgressDialog(resources.getString(R.string.please_wait))
+        FirestoreClass().getProductsList(this@ProductsFragment)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        getProductListFromFireStore()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

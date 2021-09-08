@@ -5,8 +5,10 @@ import android.content.SharedPreferences
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.example.myshoppal.models.Product
 import com.example.myshoppal.models.User
+import com.example.myshoppal.ui.Fragments.ProductsFragment
 import com.example.myshoppal.ui.activities.*
 import com.example.myshoppal.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
@@ -175,4 +177,29 @@ class FirestoreClass {
                 Log.e("Error in adding prod ::", e.message.toString())
             }
     }
+    fun getProductsList(fragment: Fragment) {
+        mFireStore.collection(Constants.PRODUCTS)
+            .whereEqualTo(Constants.USER_ID, getCurrentUserId())
+            .get()
+            .addOnSuccessListener { document ->
+                Log.i("Product List ::", document.documents.toString())
+                val productList: ArrayList<Product> = ArrayList()
+
+                for (i in document.documents) {
+                    val product = i.toObject(Product::class.java)!!
+                    product.product_id = i.id
+                    productList.add(product)
+                }
+                when (fragment) {
+                    is ProductsFragment -> fragment.successProductListFromFirestore(productList)
+                }
+            }
+            .addOnFailureListener { e ->
+                when (fragment) {
+                    is ProductsFragment -> fragment.hideProgressDialog()
+                }
+                Log.e(fragment.javaClass.simpleName, "Error while getting Product list", e)
+            }
+    }
+
 }
