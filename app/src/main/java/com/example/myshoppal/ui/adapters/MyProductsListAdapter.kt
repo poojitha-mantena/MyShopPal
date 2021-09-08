@@ -35,6 +35,10 @@ open class MyProductsListAdapter(
 
             holder.itemView.tv_item_name.text = model.title
             holder.itemView.tv_item_price.text = "$${model.price}"
+
+            holder.itemView.ib_delete_product.setOnClickListener{
+                fragment.deleteProduct(model.product_id)
+            }
         }
     }
 

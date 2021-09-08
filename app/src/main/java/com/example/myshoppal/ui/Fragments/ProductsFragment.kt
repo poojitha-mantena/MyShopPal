@@ -1,10 +1,12 @@
 package com.example.myshoppal.ui.Fragments
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myshoppal.R
@@ -51,6 +53,14 @@ class ProductsFragment : BaseFragment() {
 
     }
 
+    fun productDeleteSuccess(){
+        hideProgressDialog()
+
+        Toast.makeText(requireActivity(), getString(R.string.product_delete_success), Toast.LENGTH_SHORT).show()
+
+        getProductListFromFireStore()
+    }
+
     private fun getProductListFromFireStore() {
         showProgressDialog(resources.getString(R.string.please_wait))
         FirestoreClass().getProductsList(this@ProductsFragment)
@@ -60,6 +70,10 @@ class ProductsFragment : BaseFragment() {
         super.onResume()
 
         getProductListFromFireStore()
+    }
+
+    fun deleteProduct(productID: String) {
+       showAlertDialogToDeleteProduct(productID)
     }
 
     override fun onCreateView(
@@ -91,6 +105,31 @@ class ProductsFragment : BaseFragment() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun showAlertDialogToDeleteProduct(productID : String){
+        val builder = AlertDialog.Builder(requireActivity())
+
+        builder.setTitle(getString(R.string.delete_dialog_title))
+        builder.setMessage(getString(R.string.delete_dialog_message))
+        builder.setIcon(android.R.drawable.ic_dialog_alert)
+        builder.setPositiveButton(getString(R.string.yes)){
+                dialogInterface,_->
+
+            showProgressDialog(getString(R.string.please_wait))
+
+            FirestoreClass().deleteProduct(this,productID)
+
+            dialogInterface.dismiss()
+        }
+        builder.setNegativeButton(getString(R.string.no)){
+                dialogInterface,_->
+            dialogInterface.dismiss()
+        }
+
+        val alertDialog : AlertDialog = builder.create()
+        alertDialog.setCancelable(false)
+        alertDialog.show()
     }
 
 }
