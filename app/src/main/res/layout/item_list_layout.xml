@@ -35,7 +35,6 @@
         android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/ib_delete_product"
         app:layout_constraintStart_toEndOf="@id/ll_item_image"
         app:layout_constraintTop_toTopOf="parent">
 
