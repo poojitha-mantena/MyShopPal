@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.myshoppal.models.Product
 import com.example.myshoppal.models.User
+import com.example.myshoppal.ui.Fragments.DashboardFragment
 import com.example.myshoppal.ui.Fragments.ProductsFragment
 import com.example.myshoppal.ui.activities.*
 import com.example.myshoppal.utils.Constants
@@ -199,6 +200,29 @@ class FirestoreClass {
                     is ProductsFragment -> fragment.hideProgressDialog()
                 }
                 Log.e(fragment.javaClass.simpleName, "Error while getting Product list", e)
+            }
+    }
+
+    fun getDashboardItemsList(fragment: DashboardFragment) {
+        mFireStore.collection(Constants.PRODUCTS)
+            .get()
+            .addOnSuccessListener { document ->
+                Log.e(fragment.javaClass.simpleName, document.documents.toString())
+
+                val productsList: ArrayList<Product> = ArrayList()
+
+                for (i in document.documents) {
+
+                    val product = i.toObject(Product::class.java)!!
+                    product.product_id = i.id
+                    productsList.add(product)
+                }
+
+                fragment.successDashboardItemsList(productsList)
+            }
+            .addOnFailureListener { e ->
+                fragment.hideProgressDialog()
+                Log.e(fragment.javaClass.simpleName, "Error while getting dashboard items list.", e)
             }
     }
 
