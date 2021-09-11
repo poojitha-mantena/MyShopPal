@@ -3,15 +3,16 @@ package com.example.myshoppal.ui.Fragments
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.myshoppal.R
 import com.example.myshoppal.databinding.FragmentDashboardBinding
 import com.example.myshoppal.firestore.FirestoreClass
 import com.example.myshoppal.models.Product
+import com.example.myshoppal.ui.activities.ProductDetailsActivity
 import com.example.myshoppal.ui.activities.SettingsActivity
 import com.example.myshoppal.ui.adapters.DashboardItemListsAdapter
+import com.example.myshoppal.utils.Constants
 import kotlinx.android.synthetic.main.fragment_dashboard.*
 
 class DashboardFragment : BaseFragment() {
@@ -79,6 +80,14 @@ class DashboardFragment : BaseFragment() {
 
             val adapter = DashboardItemListsAdapter(requireActivity(), dashboardItemsList)
             rv_dashboard_items.adapter = adapter
+
+            adapter.setOnClickListener(object : DashboardItemListsAdapter.OnClickListener {
+                override fun onClick(position: Int, product: Product) {
+                    val intent = Intent(context, ProductDetailsActivity::class.java)
+                    intent.putExtra(Constants.EXTRA_PRODUCT_ID, product.product_id)
+                    startActivity(intent)
+                }
+            })
         } else {
             rv_dashboard_items.visibility = View.GONE
             tv_no_dashboard_items_found.visibility = View.VISIBLE

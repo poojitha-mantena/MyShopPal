@@ -78,9 +78,9 @@
     <string name="no">No</string>
 
     <!-- product details activity-->
-    <string name="title_product_detail">PRODUCT DETAILS</string>
+    <string name="title_product_details">PRODUCT DETAILS</string>
     <string name="lbl_product_description">Product Description</string>
-    <string name="lbl_product_detail_stock_quantity">Stock Quantity</string>
+    <string name="lbl_product_details_stock_quantity">Stock Quantity</string>
     <string name="btn_lbl_add_to_cart">ADD TO CART</string>
     <string name="success_message_item_added_in_cart">Product was added to your cart.</string>
     <string name="btn_lbl_go_to_cart">Go To Cart</string>
