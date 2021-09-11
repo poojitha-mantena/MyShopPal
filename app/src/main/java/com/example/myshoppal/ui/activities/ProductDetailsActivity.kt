@@ -97,7 +97,7 @@ class ProductDetailsActivity : BaseActivity(), View.OnClickListener {
         )
 
         tv_product_details_title.text = product.title
-        tv_product_details_price.text = "$${product.price}"
+        tv_product_details_price.text = "₹${product.price}"
         tv_product_details_description.text = product.description
         tv_product_details_available_quantity.text = product.stock_quantity
 

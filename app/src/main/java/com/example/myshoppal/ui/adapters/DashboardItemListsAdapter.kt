@@ -37,7 +37,7 @@ open class DashboardItemListsAdapter(
                 holder.itemView.iv_dashboard_item_image
             )
             holder.itemView.tv_dashboard_item_title.text = model.title
-            holder.itemView.tv_dashboard_item_price.text = "$${model.price}"
+            holder.itemView.tv_dashboard_item_price.text = "₹${model.price}"
 
             holder.itemView.setOnClickListener {
                 if (onClickListener != null) {
