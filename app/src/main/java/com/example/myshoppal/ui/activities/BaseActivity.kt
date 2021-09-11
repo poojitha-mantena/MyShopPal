@@ -2,6 +2,7 @@ package com.example.myshoppal.ui.activities
 
 import android.app.Dialog
 import android.os.Handler
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.TextView
 import android.widget.Toast

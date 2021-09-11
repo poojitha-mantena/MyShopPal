@@ -6,6 +6,7 @@ import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.myshoppal.models.CartItem
 import com.example.myshoppal.models.Product
 import com.example.myshoppal.models.User
 import com.example.myshoppal.ui.Fragments.DashboardFragment
@@ -256,6 +257,53 @@ class FirestoreClass {
                 activity.hideProgressDialog()
 
                 Log.e(activity.javaClass.simpleName, "Error while getting the product details.", e)
+            }
+    }
+
+    fun addCartItems(activity: ProductDetailsActivity, addToCart: CartItem) {
+
+        mFireStore.collection(Constants.CART_ITEMS)
+            .document()
+            .set(addToCart, SetOptions.merge())
+            .addOnSuccessListener {
+                activity.addToCartSuccess()
+            }
+            .addOnFailureListener { e ->
+
+                activity.hideProgressDialog()
+
+                Log.e(
+                    activity.javaClass.simpleName,
+                    "Error while creating the document for cart item.",
+                    e
+                )
+            }
+    }
+
+    fun checkIfItemExistInCart(activity: ProductDetailsActivity, productId: String) {
+
+        mFireStore.collection(Constants.CART_ITEMS)
+            .whereEqualTo(Constants.USER_ID, getCurrentUserId())
+            .whereEqualTo(Constants.PRODUCT_ID, productId)
+            .get()
+            .addOnSuccessListener { document ->
+
+                Log.e(activity.javaClass.simpleName, document.documents.toString())
+
+                if (document.documents.size > 0) {
+                    activity.productExistsInCart()
+                } else {
+                    activity.hideProgressDialog()
+                }
+            }
+            .addOnFailureListener { e ->
+                activity.hideProgressDialog()
+
+                Log.e(
+                    activity.javaClass.simpleName,
+                    "Error while checking the existing cart list.",
+                    e
+                )
             }
     }
 
