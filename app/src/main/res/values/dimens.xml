@@ -111,6 +111,8 @@
     <dimen name="ll_checkout_padding">16dp</dimen>
     <dimen name="checkout_label_value_textSize">18sp</dimen>
 
+    <dimen name="no_data_found_textSize">20sp</dimen>
+
     <!-- card Item -->
     <dimen name="cart_item_marginTop">16dp</dimen>
     <dimen name="cart_item_paddingStartEnd">16dp</dimen>
