@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myshoppal.R
 import com.example.myshoppal.models.Order
+import com.example.myshoppal.ui.activities.MyOrderDetailsActivity
 import com.example.myshoppal.utils.Constants
 import com.example.myshoppal.utils.GlideLoader
 import kotlinx.android.synthetic.main.item_list_layout.view.*
@@ -40,6 +41,12 @@ open class MyOrdersListAdapter(
             holder.itemView.tv_item_price.text = "₹${model.total_amount}"
 
             holder.itemView.ib_delete_product.visibility = View.GONE
+
+            holder.itemView.setOnClickListener {
+                val intent = Intent(context, MyOrderDetailsActivity::class.java)
+                intent.putExtra(Constants.EXTRA_MY_ORDER_DETAILS, model)
+                context.startActivity(intent)
+            }
         }
     }
     override fun getItemCount(): Int {
