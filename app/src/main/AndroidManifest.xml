@@ -11,13 +11,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyShopPal">
-        <activity android:name=".ui.activities.CartListActivity"
+        <activity android:name=".ui.activities.AddressListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar"></activity>
         <activity
+            android:name=".ui.activities.CartListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBar" />
+        <activity
             android:name=".ui.activities.ProductDetailsActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar"></activity>
+            android:theme="@style/NoActionBar" />
         <activity
             android:name=".ui.activities.AddProductActivity"
             android:screenOrientation="portrait"
