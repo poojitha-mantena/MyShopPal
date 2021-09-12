@@ -554,20 +554,28 @@ class FirestoreClass {
                 )
             }
     }
-    fun updateAllDetails(activity: CheckoutActivity, cartList: ArrayList<CartItem>) {
+    fun updateAllDetails(activity: CheckoutActivity, cartList: ArrayList<CartItem>, order: Order) {
         val writeBatch = mFireStore.batch()
 
-        for (cart in cartList) {
+        for (cartItem in cartList) {
+            val soldProduct = SoldProduct(
+                cartItem.product_owner_id,
+                cartItem.title,
+                cartItem.price,
+                cartItem.cart_quantity,
+                cartItem.image,
+                order.title,
+                order.order_datetime,
+                order.sub_total_amount,
+                order.shipping_charge,
+                order.total_amount,
+                order.address
+            )
 
-            val productHashMap = HashMap<String, Any>()
+            val documentReference = mFireStore.collection(Constants.SOLD_PRODUCTS)
+                .document(cartItem.product_id)
 
-            productHashMap[Constants.STOCK_QUANTITY] =
-                (cart.stock_quantity.toInt() - cart.cart_quantity.toInt()).toString()
-
-            val documentReference = mFireStore.collection(Constants.PRODUCTS)
-                .document(cart.product_id)
-
-            writeBatch.update(documentReference, productHashMap)
+            writeBatch.set(documentReference, soldProduct)
         }
         for (cart in cartList) {
 
@@ -580,7 +588,6 @@ class FirestoreClass {
             activity.allDetailsUpdatedSuccessfully()
 
         }.addOnFailureListener { e ->
-            // Here call a function of base activity for transferring the result to it.
             activity.hideProgressDialog()
 
             Log.e(
