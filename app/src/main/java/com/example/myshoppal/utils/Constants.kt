@@ -49,6 +49,8 @@ object Constants {
     const val ADD_ADDRESS_REQUEST_CODE: Int = 121
     const val EXTRA_SELECTED_ADDRESS: String = "extra_selected_address"
 
+    const val STOCK_QUANTITY: String = "stock_quantity"
+
 
     fun showImageChooser(activity: Activity) {
         val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
