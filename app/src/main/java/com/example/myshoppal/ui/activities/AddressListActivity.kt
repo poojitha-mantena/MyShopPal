@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myshoppal.R
@@ -11,6 +12,8 @@ import com.example.myshoppal.firestore.FirestoreClass
 import com.example.myshoppal.models.Address
 import com.example.myshoppal.ui.adapters.AddressListAdapter
 import com.example.myshoppal.utils.Constants
+import com.example.myshoppal.utils.SwipeToDeleteCallback
+import com.example.myshoppal.utils.SwipeToEditCallback
 import kotlinx.android.synthetic.main.activity_address_list.*
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.item_dashboard_layout.view.*
@@ -27,6 +30,10 @@ class AddressListActivity : BaseActivity() {
         tv_add_address.setOnClickListener {
             val intent = Intent(this@AddressListActivity, AddEditAddressActivity::class.java)
             startActivity(intent)
+        }
+        if (intent.hasExtra(Constants.EXTRA_ADDRESS_DETAILS)) {
+            mSelectAddress =
+                intent.getBooleanExtra(Constants.EXTRA_ADDRESS_DETAILS, false)
         }
     }
 
@@ -62,6 +69,21 @@ class AddressListActivity : BaseActivity() {
             val addressAdapter =
                 AddressListAdapter(this@AddressListActivity, addressList, mSelectAddress)
             rv_address_list.adapter = addressAdapter
+
+            if (!mSelectAddress) {
+                val editSwipeHandler = object : SwipeToEditCallback(this) {
+                    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+
+                        val adapter = rv_address_list.adapter as AddressListAdapter
+                        adapter.notifyEditItem(
+                            this@AddressListActivity,
+                            viewHolder.adapterPosition
+                        )
+                    }
+                }
+                val editItemTouchHelper = ItemTouchHelper(editSwipeHandler)
+                editItemTouchHelper.attachToRecyclerView(rv_address_list)
+        }
 
         }else{
             rv_address_list.visibility = View.GONE
