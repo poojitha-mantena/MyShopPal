@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.myshoppal.models.*
 import com.example.myshoppal.ui.Fragments.DashboardFragment
+import com.example.myshoppal.ui.Fragments.OrdersFragment
 import com.example.myshoppal.ui.Fragments.ProductsFragment
 import com.example.myshoppal.ui.activities.*
 import com.example.myshoppal.utils.Constants
@@ -588,6 +589,31 @@ class FirestoreClass {
                 e
             )
         }
+    }
+
+    fun getMyOrdersList(fragment: OrdersFragment) {
+        mFireStore.collection(Constants.ORDERS)
+            .whereEqualTo(Constants.USER_ID, getCurrentUserId())
+            .get()
+            .addOnSuccessListener { document ->
+                Log.e(fragment.javaClass.simpleName, document.documents.toString())
+                val list: ArrayList<Order> = ArrayList()
+
+                for (i in document.documents) {
+
+                    val orderItem = i.toObject(Order::class.java)!!
+                    orderItem.id = i.id
+
+                    list.add(orderItem)
+                }
+
+                fragment.populateOrdersListInUI(list)
+            }
+            .addOnFailureListener { e ->
+                fragment.hideProgressDialog()
+
+                Log.e(fragment.javaClass.simpleName, "Error while getting the orders list.", e)
+            }
     }
 
 }
