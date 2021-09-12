@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myshoppal.R
 import com.example.myshoppal.models.SoldProduct
+import com.example.myshoppal.ui.activities.SoldProductDetailsActivity
 import com.example.myshoppal.utils.Constants
 import com.example.myshoppal.utils.GlideLoader
 import kotlinx.android.synthetic.main.item_list_layout.view.*
@@ -42,6 +43,11 @@ open class SoldProductsListAdapter(
 
             holder.itemView.ib_delete_product.visibility = View.GONE
 
+            holder.itemView.setOnClickListener {
+                val intent = Intent(context, SoldProductDetailsActivity::class.java)
+                intent.putExtra(Constants.EXTRA_SOLD_PRODUCT_DETAILS, model)
+                context.startActivity(intent)
+            }
         }
     }
     override fun getItemCount(): Int {
