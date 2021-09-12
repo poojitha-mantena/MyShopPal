@@ -1,8 +1,10 @@
 package com.example.myshoppal.ui.activities
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -30,17 +32,30 @@ class AddressListActivity : BaseActivity() {
 
         tv_add_address.setOnClickListener {
             val intent = Intent(this@AddressListActivity, AddEditAddressActivity::class.java)
-            startActivity(intent)
+            startActivityForResult(intent,Constants.ADD_ADDRESS_REQUEST_CODE)
         }
-        if (intent.hasExtra(Constants.EXTRA_ADDRESS_DETAILS)) {
+        getAddressList()
+
+        if (intent.hasExtra(Constants.EXTRA_SELECT_ADDRESS)) {
             mSelectAddress =
-                intent.getBooleanExtra(Constants.EXTRA_ADDRESS_DETAILS, false)
+                intent.getBooleanExtra(Constants.EXTRA_SELECT_ADDRESS, false)
+        }
+        if (mSelectAddress) {
+            tv_title_address_list.text = resources.getString(R.string.title_select_address)
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        getAddressList()
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == Constants.ADD_ADDRESS_REQUEST_CODE) {
+
+                getAddressList()
+            }
+        } else if (resultCode == Activity.RESULT_CANCELED) {
+            Log.e("Request Cancelled", "To add the address.")
+        }
     }
 
     private fun setupActionBar() {

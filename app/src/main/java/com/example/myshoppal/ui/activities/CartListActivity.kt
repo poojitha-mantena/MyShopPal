@@ -1,5 +1,6 @@
 package com.example.myshoppal.ui.activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -10,6 +11,7 @@ import com.example.myshoppal.firestore.FirestoreClass
 import com.example.myshoppal.models.CartItem
 import com.example.myshoppal.models.Product
 import com.example.myshoppal.ui.adapters.CartItemsListAdapter
+import com.example.myshoppal.utils.Constants
 import kotlinx.android.synthetic.main.activity_add_product.*
 import kotlinx.android.synthetic.main.activity_cart_list.*
 
@@ -23,6 +25,12 @@ class CartListActivity : BaseActivity() {
         setContentView(R.layout.activity_cart_list)
 
         setupActionBar()
+
+        btn_checkout.setOnClickListener {
+            val intent = Intent(this@CartListActivity, AddressListActivity::class.java)
+            intent.putExtra(Constants.EXTRA_SELECT_ADDRESS, true)
+            startActivity(intent)
+        }
     }
 
     private fun setupActionBar() {

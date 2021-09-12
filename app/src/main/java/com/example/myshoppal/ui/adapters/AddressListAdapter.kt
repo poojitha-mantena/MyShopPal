@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myshoppal.R
 import com.example.myshoppal.models.Address
 import com.example.myshoppal.ui.activities.AddEditAddressActivity
+import com.example.myshoppal.ui.activities.CheckoutActivity
 import com.example.myshoppal.utils.Constants
 import kotlinx.android.synthetic.main.item_address_layout.view.*
 
@@ -39,11 +40,9 @@ open class AddressListAdapter(
 
             if (selectAddress) {
                 holder.itemView.setOnClickListener {
-                    Toast.makeText(
-                        context,
-                        "Selected address : ${model.address}, ${model.zipCode}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    val intent = Intent(context, CheckoutActivity::class.java)
+                    //intent.putExtra(Constants.EXTRA_SELECTED_ADDRESS, model)
+                    context.startActivity(intent)
                 }
             }
         }
@@ -56,6 +55,7 @@ open class AddressListAdapter(
     fun notifyEditItem(activity: Activity, position: Int) {
         val intent = Intent(context, AddEditAddressActivity::class.java)
         intent.putExtra(Constants.EXTRA_ADDRESS_DETAILS, list[position])
+        activity.startActivityForResult(intent, Constants.ADD_ADDRESS_REQUEST_CODE)
         notifyItemChanged(position)
     }
 
