@@ -364,14 +364,11 @@ class FirestoreClass {
             }
     }
     fun removeItemFromCart(context: Context, cart_id: String) {
-
-        // Cart items collection name
         mFireStore.collection(Constants.CART_ITEMS)
-            .document(cart_id) // cart id
+            .document(cart_id)
             .delete()
             .addOnSuccessListener {
 
-                // Notify the success result of the removed cart item from the list to the base class.
                 when (context) {
                     is CartListActivity -> {
                         context.itemRemovedSuccess()
@@ -379,8 +376,6 @@ class FirestoreClass {
                 }
             }
             .addOnFailureListener { e ->
-
-                // Hide the progress dialog if there is any error.
                 when (context) {
                     is CartListActivity -> {
                         context.hideProgressDialog()
@@ -389,6 +384,33 @@ class FirestoreClass {
                 Log.e(
                     context.javaClass.simpleName,
                     "Error while removing the item from the cart list.",
+                    e
+                )
+            }
+    }
+
+    fun updateMyCart(context: Context, cart_id: String, itemHashMap: HashMap<String, Any>) {
+
+        mFireStore.collection(Constants.CART_ITEMS)
+            .document(cart_id)
+            .update(itemHashMap)
+            .addOnSuccessListener {
+
+                when (context) {
+                    is CartListActivity -> {
+                        context.itemUpdateSuccess()
+                    }
+                }
+            }
+            .addOnFailureListener { e ->
+                when (context) {
+                    is CartListActivity -> {
+                        context.hideProgressDialog()
+                    }
+                }
+                Log.e(
+                    context.javaClass.simpleName,
+                    "Error while updating the cart item.",
                     e
                 )
             }
