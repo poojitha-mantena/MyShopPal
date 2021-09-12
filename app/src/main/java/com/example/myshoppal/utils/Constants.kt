@@ -9,6 +9,7 @@ import android.webkit.MimeTypeMap
 object Constants {
     const val USERS: String = "users"
     const val PRODUCTS: String = "products"
+    const val ORDERS: String = "orders"
 
     const val MY_SHOP_PAL_PREFERENCES: String = "myShopPalPreferences"
     const val LOGGED_IN_USERNAME: String = "logged_in_user_name"
@@ -46,6 +47,7 @@ object Constants {
     const val EXTRA_ADDRESS_DETAILS: String = "AddressDetails"
     const val EXTRA_SELECT_ADDRESS: String = "extra_select_address"
     const val ADD_ADDRESS_REQUEST_CODE: Int = 121
+    const val EXTRA_SELECTED_ADDRESS: String = "extra_selected_address"
 
 
     fun showImageChooser(activity: Activity) {
