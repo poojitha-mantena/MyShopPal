@@ -11,9 +11,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyShopPal">
-        <activity android:name=".ui.activities.AddressListActivity"
+        <activity android:name=".ui.activities.AddEditAddressActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar"></activity>
+        <activity
+            android:name=".ui.activities.AddressListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBar" />
         <activity
             android:name=".ui.activities.CartListActivity"
             android:screenOrientation="portrait"

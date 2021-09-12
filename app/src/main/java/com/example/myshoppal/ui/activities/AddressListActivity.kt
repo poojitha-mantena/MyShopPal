@@ -1,15 +1,22 @@
 package com.example.myshoppal.ui.activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.myshoppal.R
+import com.example.myshoppal.utils.Constants
 import kotlinx.android.synthetic.main.activity_address_list.*
 import kotlinx.android.synthetic.main.activity_settings.*
 
-class AddressListActivity : AppCompatActivity() {
+class AddressListActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_address_list)
+
+        tv_add_address.setOnClickListener {
+            val intent = Intent(this@AddressListActivity, AddEditAddressActivity::class.java)
+            startActivity(intent)
+        }
 
         setupActionBar()
     }
